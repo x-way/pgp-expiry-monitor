@@ -12,6 +12,9 @@ import (
 
 	"github.com/ProtonMail/go-crypto/openpgp/packet"
 	"github.com/ProtonMail/gopenpgp/v2/crypto"
+
+	// import CA certs
+	_ "golang.org/x/crypto/x509roots/fallback"
 )
 
 func main() {
