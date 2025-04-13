@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/ProtonMail/go-crypto/openpgp/packet"
-	"github.com/ProtonMail/gopenpgp/v2/crypto"
+	"github.com/ProtonMail/gopenpgp/v3/crypto"
 
 	// import CA certs
 	_ "golang.org/x/crypto/x509roots/fallback"
