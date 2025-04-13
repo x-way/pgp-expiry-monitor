@@ -12,6 +12,7 @@ Either install the go package
 Run the go binary from your local path
 ```
 # pgp-expiry-monitor -u http://example.com/my-pgp-public-key.txt -d 90
+Key AAA123BB (4567abcd0123effe9876cccc0000babddefc4331) is not valid on 13.05.2025
 ```
 
 ## Parameters
