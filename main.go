@@ -20,6 +20,7 @@ import (
 func main() {
 	url := flag.String("u", "", "URL where the public key file is located")
 	days := flag.Int("d", 30, "Number of days into the future to check for expiry")
+	verbose := flag.Bool("v", false, "Verbose output")
 	flag.Parse()
 
 	if *url == "" {
@@ -40,9 +41,9 @@ func main() {
 
 	e := key.GetEntity()
 	selfsig, _ := e.PrimarySelfSignature()
-	expired := checkPubKey(e.PrimaryKey, selfsig, mytime)
+	expired := checkPubKey(e.PrimaryKey, selfsig, mytime, *verbose)
 	for _, s := range e.Subkeys {
-		if checkPubKey(s.PublicKey, s.Sig, mytime) {
+		if checkPubKey(s.PublicKey, s.Sig, mytime, *verbose) {
 			expired = true
 		}
 	}
@@ -69,22 +70,35 @@ func loadKey(url string) (string, error) {
 	return buf.String(), nil
 }
 
-func checkPubKey(p *packet.PublicKey, s *packet.Signature, t time.Time) bool {
-	if expiredKey(s, t) {
-		fmt.Printf("Key %s (%x) is not valid on %s\n", p.KeyIdShortString(), p.Fingerprint, t.Format("01.02.2006"))
+func checkPubKey(p *packet.PublicKey, s *packet.Signature, t time.Time, verbose bool) bool {
+	expiryTime, expires := getKeyExpiry(p, s)
+
+	if !expires {
+		if verbose {
+			fmt.Printf("Key %s (%x) has no expiry date\n", p.KeyIdShortString(), p.Fingerprint)
+		}
+		return false
+	}
+
+	if t.Unix() < p.CreationTime.Unix() {
+		fmt.Printf("Key %s (%x) is only valid after %s\n", p.KeyIdShortString(), p.Fingerprint, s.CreationTime.Format("2006-01-02"))
 		return true
 	}
 
+	if t.Unix() > expiryTime.Unix() {
+		fmt.Printf("Key %s (%x) is not valid after %s\n", p.KeyIdShortString(), p.Fingerprint, expiryTime.Format("2006-01-02"))
+		return true
+	}
+
+	if verbose {
+		fmt.Printf("Key %s (%x) expires on %s\n", p.KeyIdShortString(), p.Fingerprint, expiryTime.Format("2006-01-02"))
+	}
 	return false
 }
 
-func expiredKey(s *packet.Signature, t time.Time) bool {
-	if t.Unix() < s.CreationTime.Unix() {
-		return true
-	}
+func getKeyExpiry(p *packet.PublicKey, s *packet.Signature) (time.Time, bool) {
 	if s.KeyLifetimeSecs == nil || *s.KeyLifetimeSecs == 0 {
-		return false
+		return time.Time{}, false
 	}
-	expiry := s.CreationTime.Add(time.Duration(*s.KeyLifetimeSecs) * time.Second)
-	return t.Unix() > expiry.Unix()
+	return p.CreationTime.Add(time.Duration(*s.KeyLifetimeSecs) * time.Second), true
 }
