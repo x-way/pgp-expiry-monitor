@@ -18,16 +18,30 @@ import (
 )
 
 func main() {
-	url := flag.String("u", "", "URL where the public key file is located")
-	days := flag.Int("d", 30, "Number of days into the future to check for expiry")
-	verbose := flag.Bool("v", false, "Verbose output")
+	var (
+		url, fp string
+		days    int
+		verbose bool
+	)
+	flag.StringVar(&url, "u", "", "URL where the public key file is located")
+	flag.StringVar(&fp, "f", "", "fingerprint to use to fetch file from keys.openpgp.org")
+	flag.IntVar(&days, "d", 30, "Number of days into the future to check for expiry")
+	flag.BoolVar(&verbose, "v", false, "Verbose output")
 	flag.Parse()
 
-	if *url == "" {
-		log.Fatal("Missing -u url parameter")
+	if url == "" && fp == "" {
+		log.Fatal("Missing -u url or -f fingerprint parameter")
 	}
 
-	keydata, err := loadKey(*url)
+	if url != "" && fp != "" {
+		log.Fatal("Only one of -u or -f can be specified")
+	}
+
+	if fp != "" {
+		url = fmt.Sprintf("https://keys.openpgp.org/vks/v1/by-fingerprint/%s", fp)
+	}
+
+	keydata, err := loadKey(url)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,13 +51,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	mytime := time.Now().AddDate(0, 0, *days)
+	mytime := time.Now().AddDate(0, 0, days)
 
 	e := key.GetEntity()
 	selfsig, _ := e.PrimarySelfSignature()
-	expired := checkPubKey(e.PrimaryKey, selfsig, mytime, *verbose)
+	expired := checkPubKey(e.PrimaryKey, selfsig, mytime, verbose)
 	for _, s := range e.Subkeys {
-		if checkPubKey(s.PublicKey, s.Sig, mytime, *verbose) {
+		if checkPubKey(s.PublicKey, s.Sig, mytime, verbose) {
 			expired = true
 		}
 	}
