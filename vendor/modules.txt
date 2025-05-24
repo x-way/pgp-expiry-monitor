@@ -26,8 +26,8 @@ github.com/ProtonMail/go-crypto/openpgp/x448
 # github.com/ProtonMail/go-mime v0.0.0-20230322103455-7d82a3887f2f
 ## explicit; go 1.12
 github.com/ProtonMail/go-mime
-# github.com/ProtonMail/gopenpgp/v2 v2.8.3
-## explicit; go 1.17
+# github.com/ProtonMail/gopenpgp/v2 v2.9.0
+## explicit; go 1.22.0
 github.com/ProtonMail/gopenpgp/v2/armor
 github.com/ProtonMail/gopenpgp/v2/constants
 github.com/ProtonMail/gopenpgp/v2/crypto
