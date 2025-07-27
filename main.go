@@ -55,9 +55,9 @@ func main() {
 
 	e := key.GetEntity()
 	selfsig, _ := e.PrimarySelfSignature()
-	expired := checkPubKey(e.PrimaryKey, selfsig, mytime, verbose)
+	expired := checkPubKey(e.PrimaryKey, selfsig, e.Revocations, mytime, verbose)
 	for _, s := range e.Subkeys {
-		if checkPubKey(s.PublicKey, s.Sig, mytime, verbose) {
+		if checkPubKey(s.PublicKey, s.Sig, s.Revocations, mytime, verbose) {
 			expired = true
 		}
 	}
@@ -84,7 +84,26 @@ func loadKey(url string) (string, error) {
 	return buf.String(), nil
 }
 
-func checkPubKey(p *packet.PublicKey, s *packet.Signature, t time.Time, verbose bool) bool {
+func checkPubKey(p *packet.PublicKey, s *packet.Signature, revocations []*packet.Signature, t time.Time, verbose bool) bool {
+	if len(revocations) > 0 {
+		if verbose {
+			fmt.Printf("Key %s (%x) has been revoked", p.KeyIdShortString(), p.Fingerprint)
+			for i, revSig := range revocations {
+				if i > 0 {
+					fmt.Print(", ")
+				}
+				if revSig.RevocationReasonText != "" {
+					fmt.Printf(" (reason: %s)", revSig.RevocationReasonText)
+				}
+				if !revSig.CreationTime.IsZero() {
+					fmt.Printf(" on %s", revSig.CreationTime.Format("2006-01-02"))
+				}
+			}
+			fmt.Println()
+		}
+		return false
+	}
+
 	expiryTime, expires := getKeyExpiry(p, s)
 
 	if !expires {
