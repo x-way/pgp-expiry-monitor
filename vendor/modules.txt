@@ -60,8 +60,8 @@ golang.org/x/crypto/cryptobyte
 golang.org/x/crypto/cryptobyte/asn1
 golang.org/x/crypto/hkdf
 golang.org/x/crypto/sha3
-# golang.org/x/crypto/x509roots/fallback v0.0.0-20250807172104-ef5341b70697
-## explicit; go 1.23.0
+# golang.org/x/crypto/x509roots/fallback v0.0.0-20250813150022-44ecf3af9978
+## explicit; go 1.24.0
 golang.org/x/crypto/x509roots/fallback
 # golang.org/x/sys v0.35.0
 ## explicit; go 1.23.0
