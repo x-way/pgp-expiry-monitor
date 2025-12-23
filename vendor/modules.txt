@@ -32,7 +32,7 @@ github.com/ProtonMail/gopenpgp/v2/armor
 github.com/ProtonMail/gopenpgp/v2/constants
 github.com/ProtonMail/gopenpgp/v2/crypto
 github.com/ProtonMail/gopenpgp/v2/internal
-# github.com/cloudflare/circl v1.6.1
+# github.com/cloudflare/circl v1.6.2
 ## explicit; go 1.22.0
 github.com/cloudflare/circl/dh/x25519
 github.com/cloudflare/circl/dh/x448
