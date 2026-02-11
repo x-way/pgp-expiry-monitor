@@ -1,11 +1,11 @@
 module github.com/x-way/pgp-expiry-monitor
 
-go 1.24.6
+go 1.25.0
 
 require (
 	github.com/ProtonMail/go-crypto v1.3.0
 	github.com/ProtonMail/gopenpgp/v2 v2.9.0
-	golang.org/x/crypto/x509roots/fallback v0.0.0-20260209214922-2f26647a795e
+	golang.org/x/crypto/x509roots/fallback v0.0.0-20260211191256-cab0f718548e
 )
 
 require (
