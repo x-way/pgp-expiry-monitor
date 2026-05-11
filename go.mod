@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/ProtonMail/go-crypto v1.4.1
 	github.com/ProtonMail/gopenpgp/v2 v2.10.0
-	golang.org/x/crypto/x509roots/fallback v0.0.0-20260508183218-b8a14a8d65f8
+	golang.org/x/crypto/x509roots/fallback v0.0.0-20260511143831-44decbfe70e2
 )
 
 require (
