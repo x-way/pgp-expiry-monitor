@@ -74,7 +74,7 @@ func loadKey(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	_, err = io.Copy(buf, resp.Body)
 	if err != nil {
