@@ -70,7 +70,7 @@ func main() {
 func loadKey(url string) (string, error) {
 	buf := bytes.NewBuffer(nil)
 
-	resp, err := http.Get(url)
+	resp, err := http.Get(url) // #nosec G107 -- url supplied via -u CLI flag, not attacker-controlled
 	if err != nil {
 		return "", err
 	}
