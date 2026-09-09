@@ -1,4 +1,5 @@
 # pgp-expiry-monitor - monitor PGP keys for expiry
+[![CircleCI](https://circleci.com/gh/x-way/pgp-expiry-monitor/tree/main.svg?style=svg)](https://circleci.com/gh/x-way/pgp-expiry-monitor/tree/main)
 
 The `pgp-expiry-monitor` tool provides an simple way to monitor PGP public keys for expiry.
 
